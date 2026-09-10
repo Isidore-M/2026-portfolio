@@ -1,0 +1,328 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden; /* Hide native horizontal scrolling */
+  background-color: #f5f5f7; /* Apple-esque light grey from your wireframes */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.app-wrapper {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; 
+}
+
+.horizontal-track {
+  display: flex;
+  width: 300vw;
+  height: 100vh;
+  will-change: transform; /* Forces the GPU to handle the animation */
+}
+
+.space-panel {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Floating Navbar Styles --- */
+.floating-navbar {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 32px; 
+  padding: 16px 36px; 
+  background: rgba(220, 220, 220, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 50px; 
+  z-index: 100;
+  /* Added transition for smooth hiding */
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+/* New hidden state for the navbar */
+.floating-navbar.hidden {
+  transform: translate(-50%, 150px); /* Pushes it down off the screen */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #999; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px; 
+  transition: color 0.3s ease;
+}
+
+.nav-btn:hover {
+  color: #555; 
+}
+
+.nav-btn.active {
+  color: #111; 
+}
+
+/* --- Project Room 2-Column Split View --- */
+.project-split-view {
+  width: 100%;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 80px; 
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; 
+  gap: 80px;
+  align-items: center; 
+}
+
+.project-left-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.project-title {
+  font-size: 4.5rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+  color: #111;
+  font-weight: 700;
+}
+
+.project-description {
+  font-size: 1.125rem;
+  color: #777;
+  line-height: 1.5;
+  margin-bottom: 40px;
+  max-width: 90%;
+}
+
+.category-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.category-btn {
+  padding: 14px 28px;
+  border-radius: 40px; 
+  border: none;
+  background: #e2e2e2;
+  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.category-btn:hover {
+  background: #d4d4d4;
+  color: #111;
+}
+
+.project-right-panel {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-placeholder-block {
+  width: 100%;
+  height: 65vh; 
+  min-height: 450px;
+  max-height: 700px;
+  background: #d4d4d4;
+  border-radius: 32px; 
+}
+
+/* --- Nested Carousel Styles (Detail View) --- */
+.carousel-fullscreen-overlay {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw; 
+  height: 100vh;
+  background: #f5f5f7;
+  z-index: 200; 
+  overflow: hidden; 
+  box-sizing: border-box;
+}
+
+.carousel-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  width: 100%;
+  height: 100%;
+  padding: 40px 80px; 
+  box-sizing: border-box;
+  gap: 40px;
+}
+
+/* Left Panel & Typography (Updated for pixel-perfect match) */
+.carousel-left {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 40px;
+  height: 100%;
+}
+
+.back-btn {
+  position: absolute;
+  top: 80px; /* Pushed down to match design */
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Increased gap */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.3s ease;
+}
+
+.back-btn:hover {
+  opacity: 0.7;
+}
+
+.back-icon-circle {
+  width: 44px; /* Scaled up to match design */
+  height: 44px;
+  background: #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-text {
+  font-size: 2.75rem; /* Scaled up drastically */
+  color: #c4c4c4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.carousel-text-content {
+  margin-top: 80px; /* Separates text block from the back button */
+}
+
+.carousel-project-title {
+  font-size: 3.5rem; /* Scaled up title */
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  color: #111;
+  font-weight: 700;
+}
+
+.carousel-project-desc {
+  font-size: 1.125rem;
+  color: #888;
+  margin-bottom: 24px;
+  line-height: 1.5;
+  max-width: 95%;
+}
+
+.read-more-btn {
+  display: inline;
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: #111;
+  cursor: pointer;
+  font-size: 1.125rem;
+  padding: 0;
+  margin-left: 6px;
+}
+
+.read-more-btn:hover {
+  text-decoration: underline;
+}
+
+/* Right Panel & 3D Coverflow Effect */
+.carousel-right {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-card-stack {
+  position: relative;
+  width: 85%; 
+  height: 60vh;
+  max-height: 600px; 
+}
+
+.carousel-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 32px;
+  background: #e2e2e2;
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); 
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.85); 
+  transform-origin: center center;
+}
+
+.carousel-card.card-active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  z-index: 10;
+  background: #a3a3a3; 
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  pointer-events: auto;
+}
+
+.carousel-card.card-prev {
+  opacity: 0.6;
+  transform: translateX(-12%) scale(0.9); 
+  z-index: 5;
+}
+
+.carousel-card.card-next {
+  opacity: 0.6;
+  transform: translateX(12%) scale(0.9); 
+  z-index: 5;
+}
+
+.carousel-pagination {
+  margin-top: 40px; 
+  display: flex;
+  gap: 12px;
+}
+
+.dot {
+  width: 12px;
+  height: 6px;
+  border-radius: 4px;
+  background: #ddd;
+  transition: all 0.4s ease;
+}
+
+.dot.active {
+  background: #999;
+  width: 32px; 
+}
