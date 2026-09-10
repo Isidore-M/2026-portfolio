@@ -5,9 +5,14 @@
 }
 
 body {
-  overflow-x: hidden; /* Hide native horizontal scrolling */
-  background-color: #f5f5f7; /* Apple-esque light grey from your wireframes */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  background-color: #f5f5f7;
+  /* Set Inter as the global default */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3, .carousel-project-title, .back-text, .detail-faded-text, .project-title {
+  font-family: "Geist", sans-serif;
 }
 
 .app-wrapper {
@@ -46,13 +51,11 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border-radius: 50px; 
   z-index: 100;
-  /* Added transition for smooth hiding */
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
 }
 
-/* New hidden state for the navbar */
 .floating-navbar.hidden {
-  transform: translate(-50%, 150px); /* Pushes it down off the screen */
+  transform: translate(-50%, 150px); 
   opacity: 0;
   pointer-events: none;
 }
@@ -172,7 +175,6 @@ body {
   gap: 40px;
 }
 
-/* Left Panel & Typography (Updated for pixel-perfect match) */
 .carousel-left {
   position: relative;
   display: flex;
@@ -184,11 +186,11 @@ body {
 
 .back-btn {
   position: absolute;
-  top: 80px; /* Pushed down to match design */
+  top: 80px; 
   left: 0;
   display: flex;
   align-items: center;
-  gap: 16px; /* Increased gap */
+  gap: 16px; 
   background: none;
   border: none;
   cursor: pointer;
@@ -201,7 +203,7 @@ body {
 }
 
 .back-icon-circle {
-  width: 44px; /* Scaled up to match design */
+  width: 44px; 
   height: 44px;
   background: #333;
   border-radius: 50%;
@@ -211,7 +213,7 @@ body {
 }
 
 .back-text {
-  font-size: 2.75rem; /* Scaled up drastically */
+  font-size: 2.75rem; 
   color: #c4c4c4;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -219,15 +221,15 @@ body {
 }
 
 .carousel-text-content {
-  margin-top: 80px; /* Separates text block from the back button */
+  margin-top: 80px; 
 }
 
 .carousel-project-title {
-  font-size: 3.5rem; /* Scaled up title */
+  font-size: 3.5rem; 
   letter-spacing: -0.02em;
   margin-bottom: 24px;
   color: #111;
-  font-weight: 700;
+  font-weight: 500; 
 }
 
 .carousel-project-desc {
@@ -254,7 +256,6 @@ body {
   text-decoration: underline;
 }
 
-/* Right Panel & 3D Coverflow Effect */
 .carousel-right {
   position: relative;
   display: flex;
@@ -280,7 +281,11 @@ body {
   height: 100%;
   border-radius: 32px;
   background: #e2e2e2;
-  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); 
+  transition: 
+    transform 0.5s cubic-bezier(0.25, 1.3, 0.25, 1),
+    opacity 0.4s ease,
+    background 0.4s ease;
+    
   opacity: 0;
   pointer-events: none;
   transform: scale(0.85); 
@@ -325,4 +330,240 @@ body {
 .dot.active {
   background: #999;
   width: 32px; 
+}
+
+
+/* --- Case Study Detail View Updates --- */
+.case-study-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f5f5f7;
+  z-index: 300; 
+  overflow: hidden; 
+}
+
+/* Left Panel Overrides & Alignment */
+.case-study-fullscreen .carousel-left {
+  justify-content: flex-start;
+}
+
+.detail-top-label {
+  position: absolute;
+  top: 80px; 
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.detail-faded-icon {
+  background: #c4c4c4;
+  width: 36px;
+  height: 36px;
+}
+
+.detail-faded-text {
+  color: #c4c4c4;
+  font-size: 2.25rem;
+}
+
+.detail-content-shift {
+  margin-top: 240px; 
+}
+
+.detail-title-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 32px;
+  margin-left: -40px; 
+  text-align: left;
+}
+
+.detail-back-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; 
+  height: 24px;
+  background: #111; 
+  border-radius: 50%;
+  flex-shrink: 0; 
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+
+/* Dev Category Links */
+.project-dev-links {
+  display: flex;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.dev-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #111;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.dev-link:hover {
+  opacity: 0.6;
+}
+
+/* Right Panel Scroll Restored with Fog Fade */
+.detail-right-scroll {
+  width: 100%;
+  height: 100%; 
+  max-height: 100%; 
+  overflow-y: auto; 
+  overflow-x: hidden;
+  padding-top: 180px; 
+  padding-bottom: 0px; 
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+.detail-right-scroll::-webkit-scrollbar {
+  display: none; 
+}
+
+.detail-scroll-content {
+  width: 100%;
+  max-width: 800px; 
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-images-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.detail-img-block {
+  width: 100%;
+  aspect-ratio: 1 / 1; 
+  background: #c4c4c4;
+  border-radius: 32px;
+}
+
+.detail-img-block.large {
+  aspect-ratio: 16 / 10;
+}
+
+.detail-content-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr; 
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.case-study-column p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #777;
+  margin-bottom: 12px;
+}
+
+.detail-text-block p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #b3b3b3; 
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* --- FIX FOR THE NEXT BUTTON TRIGGER --- */
+.detail-bottom-spacer {
+  height: 250px;
+  width: 100%;
+  flex-shrink: 0; /* Prevents flexbox from collapsing the spacer */
+}
+
+.scroll-trigger-pixel {
+  height: 1px;
+  width: 100%;
+  flex-shrink: 0; /* Prevents flexbox from collapsing the trigger */
+}
+
+
+/* Floating Next Project Button */
+.next-project-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 80px; 
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 12px 24px;
+  border-radius: 40px;
+  background: #222;
+  color: #fff;
+  font-size: 1.125rem;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  z-index: 400; 
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.next-project-btn:hover {
+  background: #000;
+  transform: translateY(-2px) !important;
+}
+
+.next-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+/* The Fog Fade (Right side only) */
+.case-study-fullscreen::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: auto;
+  width: 60vw; 
+  height: 40vh; 
+  background: linear-gradient(to bottom, rgba(245, 245, 247, 0) 0%, rgba(245, 245, 247, 0.8) 60%, rgba(245, 245, 247, 1) 100%);
+  pointer-events: none; 
+  z-index: 100;
 }
