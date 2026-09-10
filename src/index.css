@@ -299,6 +299,7 @@ h1, h2, h3, .carousel-project-title, .back-text, .detail-faded-text, .project-ti
   background: #a3a3a3; 
   box-shadow: 0 20px 40px rgba(0,0,0,0.08);
   pointer-events: auto;
+  cursor: pointer; /* Tells the user this card is clickable */
 }
 
 .carousel-card.card-prev {
@@ -348,6 +349,22 @@ h1, h2, h3, .carousel-project-title, .back-text, .detail-faded-text, .project-ti
 /* Left Panel Overrides & Alignment */
 .case-study-fullscreen .carousel-left {
   justify-content: flex-start;
+}
+
+/* The Fog Fade (Top - Right side only) */
+/* The Fog Fade (Top - Right side only) */
+.case-study-fullscreen::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: 60vw; 
+  height: 30px; /* Reduced from 220px for a much shorter fade */
+  /* Tightened the gradient so it fades to transparent much faster */
+  background: linear-gradient(to bottom, rgba(245, 245, 247, 1) 0%, rgba(245, 245, 247, 0.8) 40%, rgba(245, 245, 247, 0) 100%);
+  pointer-events: none; 
+  z-index: 100;
 }
 
 .detail-top-label {

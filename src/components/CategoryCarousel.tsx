@@ -29,22 +29,25 @@ export default function CategoryCarousel({ category, onBack }: CategoryCarouselP
   const projects = portfolioData[category];
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState<{ id: number; title: string; desc: string } | null>(null);
+  
+  // NEW: State to track if the description text is expanded
+  const [isDescExpanded, setIsDescExpanded] = useState(false);
+  
   const { setIsDetailViewActive } = useNavigation();
   
   const overlayRef = useRef<HTMLDivElement>(null);
   const isAnimating = useRef(false);
-  
   const activeIndexRef = useRef(activeIndex);
-  // NEW: Ref to track if the detail view is open so we can release the scroll wheel
-  const isDetailOpenRef = useRef(!!selectedProject);
 
-  useEffect(() => {
+useEffect(() => {
     activeIndexRef.current = activeIndex;
   }, [activeIndex]);
 
   useEffect(() => {
     isDetailOpenRef.current = !!selectedProject;
   }, [selectedProject]);
+
+  const isDetailOpenRef = useRef(!!selectedProject);
 
   useGSAP(() => {
     if (overlayRef.current) {
@@ -68,12 +71,11 @@ export default function CategoryCarousel({ category, onBack }: CategoryCarouselP
 
   useEffect(() => {
     setIsDetailViewActive(true);
+
     let timeoutId: ReturnType<typeof setTimeout>;
 
-    const handleNativeWheel = (e: WheelEvent) => {
-      // THE FIX: If the detail view is open, do not prevent default! Let the browser scroll normally.
+   const handleNativeWheel = (e: WheelEvent) => {
       if (isDetailOpenRef.current) return;
-      
       e.preventDefault(); 
 
       if (isAnimating.current) return;
@@ -81,10 +83,12 @@ export default function CategoryCarousel({ category, onBack }: CategoryCarouselP
 
       if (e.deltaY > 0 && activeIndexRef.current < projects.length - 1) {
         isAnimating.current = true;
+        setIsDescExpanded(false); // <--- Reset the text when scrolling down
         setActiveIndex((prev) => prev + 1);
         timeoutId = setTimeout(() => { isAnimating.current = false; }, 500); 
       } else if (e.deltaY < 0 && activeIndexRef.current > 0) {
         isAnimating.current = true;
+        setIsDescExpanded(false); // <--- Reset the text when scrolling up
         setActiveIndex((prev) => prev - 1);
         timeoutId = setTimeout(() => { isAnimating.current = false; }, 500);
       }
@@ -117,10 +121,19 @@ export default function CategoryCarousel({ category, onBack }: CategoryCarouselP
           
           <div className="carousel-text-content">
             <h2 className="carousel-project-title">{activeProject.title}</h2>
-            <p className="carousel-project-desc">{activeProject.desc}</p>
+            
+            {/* NEW: Collapsible description logic */}
             <p className="carousel-project-desc">
-              Lorem ipsum dolor sit amet, consectetuer adipiscing elit, dolor sit amet, consectetuer
-              <button className="read-more-btn" onClick={() => setSelectedProject(activeProject)}>read more</button>
+              {activeProject.desc}
+              {isDescExpanded && (
+                <span> Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</span>
+              )}
+              <button 
+                className="read-more-btn" 
+                onClick={() => setIsDescExpanded(!isDescExpanded)}
+              >
+                {isDescExpanded ? 'read less' : 'read more'}
+              </button>
             </p>
           </div>
         </div>
@@ -133,7 +146,18 @@ export default function CategoryCarousel({ category, onBack }: CategoryCarouselP
               else if (idx === activeIndex - 1) positionClass = 'card-prev';
               else if (idx === activeIndex + 1) positionClass = 'card-next';
 
-              return <div key={proj.id} className={`carousel-card ${positionClass}`} />;
+              return (
+                <div 
+                  key={proj.id} 
+                  className={`carousel-card ${positionClass}`}
+                  /* NEW: Clicking the active card opens the detail view */
+                  onClick={() => {
+                    if (idx === activeIndex) {
+                      setSelectedProject(proj);
+                    }
+                  }}
+                />
+              );
             })}
           </div>
           
@@ -153,8 +177,8 @@ export default function CategoryCarousel({ category, onBack }: CategoryCarouselP
           project={selectedProject} 
           onClose={() => setSelectedProject(null)} 
           onBackToRoom={() => {
-             setSelectedProject(null); // Clear the active project
-             handleSmoothBack(); // Trigger the carousel's closing animation
+             setSelectedProject(null); 
+             handleSmoothBack(); 
           }}
           hasNext={activeIndex < projects.length - 1}
           onNext={() => {
