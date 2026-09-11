@@ -15,7 +15,8 @@ function DetailColumn({ title, content }: { title: string, content: string }) {
 interface CaseStudyDetailProps {
   category: 'design' | 'dev';
   categoryName: string;
-  project: { id: number; title: string; desc: string };
+  // NEW: Added the images array to the expected project prop
+  project: { id: number; title: string; desc: string; images?: string[] };
   onClose: () => void;
   onBackToRoom: () => void; 
   onNext: () => void;
@@ -25,7 +26,6 @@ interface CaseStudyDetailProps {
 export default function CaseStudyDetail({ category, categoryName, project, onClose, onBackToRoom, onNext, hasNext }: CaseStudyDetailProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   
-  // NEW: Ref for the actual scrolling container to make the observer 100% accurate
   const scrollContainerRef = useRef<HTMLDivElement>(null); 
   const bottomRef = useRef<HTMLDivElement>(null);
   const nextBtnRef = useRef<HTMLButtonElement>(null);
@@ -61,7 +61,6 @@ export default function CaseStudyDetail({ category, categoryName, project, onClo
     }
   };
 
-  // The fixed observer logic
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && nextBtnRef.current) {
@@ -70,7 +69,7 @@ export default function CaseStudyDetail({ category, categoryName, project, onClo
         gsap.to(nextBtnRef.current, { autoAlpha: 0, y: 20, duration: 0.3, ease: "power2.in" });
       }
     }, { 
-      root: scrollContainerRef.current, // Binds the observer strictly to the scrolling div
+      root: scrollContainerRef.current, 
       threshold: 0 
     });
 
@@ -128,15 +127,21 @@ export default function CaseStudyDetail({ category, categoryName, project, onClo
           </div>
         </div>
         
-        {/* Attached the ref to the scroll container */}
         <div className="detail-right-scroll" ref={scrollContainerRef}>
           <div className="detail-scroll-content">
             
             {category === 'design' ? (
               <>
                 <div className="detail-images-grid">
-                  <div className="detail-img-block"></div>
-                  <div className="detail-img-block"></div>
+                  {/* NEW: Maps index 0 and 1 from the images array into the background styles */}
+                  <div 
+                    className="detail-img-block"
+                    style={project.images && project.images[0] ? { backgroundImage: `url(${project.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                  ></div>
+                  <div 
+                    className="detail-img-block"
+                    style={project.images && project.images[1] ? { backgroundImage: `url(${project.images[1]})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                  ></div>
                 </div>
                 <div className="detail-content-row">
                   <DetailColumn title="P1" content="Lorem ipsum dolor sit amet, consectetuer adipiscing elit, adipiscing elit, dolor sit amet, consectetuer Lorem ipsum dolor sit amet, consectetuer adipiscing elit, adipiscing elit, dolor sit amet, consectetuer adipiscing elit, dolor sit amet, consectetuer Lorem ipsum dolor sit amet, consectetuer adipiscing elit, adipiscing elit, dolor sit amet, consectetuer Lorem ipsum dolor sit amet, consectetuer adipiscing elit, adipiscing elit, dolor sit amet, consectetuer" />
@@ -146,7 +151,11 @@ export default function CaseStudyDetail({ category, categoryName, project, onClo
             ) : (
               <>
                 <div className="detail-images-grid" style={{ gridTemplateColumns: '1fr' }}>
-                  <div className="detail-img-block large"></div>
+                  {/* NEW: Maps index 0 into the large hero image block */}
+                  <div 
+                    className="detail-img-block large"
+                    style={project.images && project.images[0] ? { backgroundImage: `url(${project.images[0]})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                  ></div>
                 </div>
                 <div className="detail-text-block">
                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, adipiscing elit, dolor sit amet, consectetuer Lorem ipsum dolor sit amet, consectetuer adipiscing elit, adipiscing elit, dolor sit amet, consectetuer</p>

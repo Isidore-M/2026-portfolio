@@ -9,14 +9,44 @@ export type Category = 'design' | 'dev' | null;
 
 const portfolioData = {
   design: [
-    { id: 1, title: 'Project Name', desc: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, dolor sit amet, consectetuer' },
-    { id: 2, title: 'Kinetix', desc: 'Animated UI component marketplace platform. Engineered complete Figma wireframes, component design systems, and dynamic GSAP animation previews.' },
-    { id: 3, title: 'Veridian', desc: 'Brand identity concepts, logos, and website landing page structures for an architectural firm. Created visual identities and interface mockups.' }
+    { 
+      id: 1, 
+      title: 'Project Name', 
+      desc: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, dolor sit amet, consectetuer',
+      images: ['/assets/design-1-hero.jpg', '/assets/design-1-a.jpg', '/assets/design-1-b.jpg'] 
+    },
+    { 
+      id: 2, 
+      title: 'Kinetix', 
+      desc: 'Animated UI component marketplace platform. Engineered complete Figma wireframes, component design systems, and dynamic GSAP animation previews.',
+      images: ['/assets/kinetix-hero.jpg', '/assets/kinetix-a.jpg', '/assets/kinetix-b.jpg'] 
+    },
+    { 
+      id: 3, 
+      title: 'Veridian', 
+      desc: 'Brand identity concepts, logos, and website landing page structures for an architectural firm. Created visual identities and interface mockups.',
+      images: ['/assets/veridian-hero.jpg', '/assets/veridian-a.jpg', '/assets/veridian-b.jpg'] 
+    }
   ],
   dev: [
-    { id: 4, title: 'Project Name', desc: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, dolor sit amet, consectetuer' },
-    { id: 5, title: 'Retroid', desc: 'Retro video game marketplace web application built utilizing Angular component logic, HTTP services, and robust product posting functionality.' },
-    { id: 6, title: 'TaskTik', desc: 'React-based study and task management dashboard. Programmed advanced task state management, dynamic filter options, and local storage persistence.' }
+    { 
+      id: 4, 
+      title: 'Project Name', 
+      desc: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, dolor sit amet, consectetuer',
+      images: ['/assets/dev-1-hero.jpg', '/assets/dev-1-a.jpg', '/assets/dev-1-b.jpg'] 
+    },
+    { 
+      id: 5, 
+      title: 'Retroid', 
+      desc: 'Retro video game marketplace web application built utilizing Angular component logic, HTTP services, and robust product posting functionality.',
+      images: ['/assets/retroid-hero.jpg', '/assets/retroid-a.jpg', '/assets/retroid-b.jpg'] 
+    },
+    { 
+      id: 6, 
+      title: 'TaskTik', 
+      desc: 'React-based study and task management dashboard. Programmed advanced task state management, dynamic filter options, and local storage persistence.',
+      images: ['/assets/tasktik-hero.jpg', '/assets/tasktik-a.jpg', '/assets/tasktik-b.jpg'] 
+    }
   ]
 };
 
@@ -28,9 +58,9 @@ interface CategoryCarouselProps {
 export default function CategoryCarousel({ category, onBack }: CategoryCarouselProps) {
   const projects = portfolioData[category];
   const [activeIndex, setActiveIndex] = useState(0);
-  const [selectedProject, setSelectedProject] = useState<{ id: number; title: string; desc: string } | null>(null);
+  const [selectedProject, setSelectedProject] = useState<{ id: number; title: string; desc: string; images?: string[] } | null>(null);
   
-  // NEW: State to track if the description text is expanded
+  // Track if the description text is expanded
   const [isDescExpanded, setIsDescExpanded] = useState(false);
   
   const { setIsDetailViewActive } = useNavigation();
@@ -39,15 +69,29 @@ export default function CategoryCarousel({ category, onBack }: CategoryCarouselP
   const isAnimating = useRef(false);
   const activeIndexRef = useRef(activeIndex);
 
-useEffect(() => {
+  // Define activeProject early so our effects can use it
+  const activeProject = projects[activeIndex];
+
+  // --- Asset Preloader ---
+  // Silently caches the images for the active project so the Case Study opens instantly
+  useEffect(() => {
+    if (!activeProject || !activeProject.images) return;
+
+    activeProject.images.forEach((imageSrc) => {
+      const img = new Image();
+      img.src = imageSrc;
+    });
+  }, [activeProject]);
+
+  useEffect(() => {
     activeIndexRef.current = activeIndex;
   }, [activeIndex]);
 
+  const isDetailOpenRef = useRef(!!selectedProject);
+  
   useEffect(() => {
     isDetailOpenRef.current = !!selectedProject;
   }, [selectedProject]);
-
-  const isDetailOpenRef = useRef(!!selectedProject);
 
   useGSAP(() => {
     if (overlayRef.current) {
@@ -69,12 +113,29 @@ useEffect(() => {
     }
   };
 
+  // --- Unified Input Handling (Wheel, Touch, Keyboard) ---
   useEffect(() => {
     setIsDetailViewActive(true);
-
     let timeoutId: ReturnType<typeof setTimeout>;
+    let touchStartY = 0;
 
-   const handleNativeWheel = (e: WheelEvent) => {
+    // Helper functions to keep logic DRY
+    const triggerNext = () => {
+      isAnimating.current = true;
+      setIsDescExpanded(false); // Reset text state
+      setActiveIndex((prev) => prev + 1);
+      timeoutId = setTimeout(() => { isAnimating.current = false; }, 500); 
+    };
+
+    const triggerPrev = () => {
+      isAnimating.current = true;
+      setIsDescExpanded(false); // Reset text state
+      setActiveIndex((prev) => prev - 1);
+      timeoutId = setTimeout(() => { isAnimating.current = false; }, 500);
+    };
+
+    // 1. Desktop Trackpad/Mouse Wheel
+    const handleNativeWheel = (e: WheelEvent) => {
       if (isDetailOpenRef.current) return;
       e.preventDefault(); 
 
@@ -82,28 +143,62 @@ useEffect(() => {
       if (Math.abs(e.deltaY) < 15) return;
 
       if (e.deltaY > 0 && activeIndexRef.current < projects.length - 1) {
-        isAnimating.current = true;
-        setIsDescExpanded(false); // <--- Reset the text when scrolling down
-        setActiveIndex((prev) => prev + 1);
-        timeoutId = setTimeout(() => { isAnimating.current = false; }, 500); 
+        triggerNext();
       } else if (e.deltaY < 0 && activeIndexRef.current > 0) {
-        isAnimating.current = true;
-        setIsDescExpanded(false); // <--- Reset the text when scrolling up
-        setActiveIndex((prev) => prev - 1);
-        timeoutId = setTimeout(() => { isAnimating.current = false; }, 500);
+        triggerPrev();
       }
     };
 
+    // 2. Mobile Touch Start
+    const handleTouchStart = (e: TouchEvent) => {
+      if (isDetailOpenRef.current) return;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    // 3. Mobile Touch End (Swipe detection)
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isDetailOpenRef.current || isAnimating.current) return;
+      
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - touchEndY;
+
+      // Ensure the swipe was long enough to be intentional (50px threshold)
+      if (Math.abs(deltaY) < 50) return; 
+
+      if (deltaY > 0 && activeIndexRef.current < projects.length - 1) {
+        triggerNext();
+      } else if (deltaY < 0 && activeIndexRef.current > 0) {
+        triggerPrev();
+      }
+    };
+
+    // 4. Keyboard Navigation (Arrow Keys)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isDetailOpenRef.current || isAnimating.current) return;
+
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        if (activeIndexRef.current < projects.length - 1) triggerNext();
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        if (activeIndexRef.current > 0) triggerPrev();
+      }
+    };
+
+    // Attach all event listeners
     window.addEventListener('wheel', handleNativeWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       setIsDetailViewActive(false);
+      // Clean up all listeners
       window.removeEventListener('wheel', handleNativeWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('keydown', handleKeyDown);
       clearTimeout(timeoutId);
     };
   }, [setIsDetailViewActive, projects.length]);
-
-  const activeProject = projects[activeIndex];
 
   return createPortal(
     <div className="carousel-fullscreen-overlay" ref={overlayRef}>
@@ -122,7 +217,6 @@ useEffect(() => {
           <div className="carousel-text-content">
             <h2 className="carousel-project-title">{activeProject.title}</h2>
             
-            {/* NEW: Collapsible description logic */}
             <p className="carousel-project-desc">
               {activeProject.desc}
               {isDescExpanded && (
@@ -150,7 +244,6 @@ useEffect(() => {
                 <div 
                   key={proj.id} 
                   className={`carousel-card ${positionClass}`}
-                  /* NEW: Clicking the active card opens the detail view */
                   onClick={() => {
                     if (idx === activeIndex) {
                       setSelectedProject(proj);
@@ -174,7 +267,7 @@ useEffect(() => {
         <CaseStudyDetail 
           category={category}
           categoryName={category === 'design' ? 'Graphic Design' : 'Web | Mobile'}
-          project={selectedProject} 
+          project={selectedProject as { id: number; title: string; desc: string; images?: string[] }} 
           onClose={() => setSelectedProject(null)} 
           onBackToRoom={() => {
              setSelectedProject(null); 

@@ -3,9 +3,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { useGSAP } from '@gsap/react';
-// Removed useNavigation import for now since we aren't using the state yet
+
+// Components
 import Navbar from './components/Navbar';
 import ProjectRoom from './components/ProjectRoom'; 
+import HeroSpace from './components/HeroSpace'; 
+import ProfileSpace from './components/ProfileSpace';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -61,17 +64,16 @@ function App() {
   return (
     <div className="app-wrapper" ref={containerRef}>
        <div className="horizontal-track" ref={trackRef}>
-          <section className="space-panel home-space">
-             <h1>Home Space</h1>
-          </section>
+          
+          <HeroSpace />
 
           <section className="space-panel projects-space">
              <ProjectRoom />
           </section>
 
-          <section className="space-panel profile-space">
-             <h1>Profile</h1>
-          </section>
+          {/* Replaced the placeholder section with the animated Profile component */}
+          <ProfileSpace />
+          
        </div>
        
        <Navbar onNavClick={handleNavClick} activeIndex={activeIndex} />
