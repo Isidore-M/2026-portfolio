@@ -1,0 +1,86 @@
+:root { color-scheme:dark; }
+:root[data-theme=light] { color-scheme:light; background:#f5f5f5; color:#252727; }
+.theme-toggle {
+  position:fixed;
+  z-index:50;
+  top:max(22px,env(safe-area-inset-top));
+  right:max(25px,env(safe-area-inset-right));
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-height:42px;
+  padding:10px 15px;
+  border:1px solid #ffffff20;
+  border-radius:30px;
+  background:#292c2ae8;
+  color:#d5d9d6;
+  backdrop-filter:blur(15px);
+  font-size:11px;
+  transition:background .3s,color .3s,border-color .3s;
+}
+.theme-toggle:hover { background:#424643; }
+.journey,.journey-shell,.journey-dialog,.journey .splash { transition:background-color .35s,color .35s; }
+[data-theme=light] .journey,
+[data-theme=light] .journey-shell,
+[data-theme=light] .journey-dialog,
+[data-theme=light] .journey-case-backdrop,
+[data-theme=light] .journey .splash { background:#f5f5f5; color:#252727; }
+[data-theme=light] .theme-toggle { color:#414646; background:#ffffffe6; border-color:#00000012; }
+[data-theme=light] .theme-toggle:hover { background:#e4e7e5; }
+[data-theme=light] .journey ::selection { background:#313735; color:white; }
+[data-theme=light] .intro-copy p,
+[data-theme=light] .intro-copy small,
+[data-theme=light] .room-copy p,
+[data-theme=light] .bio-copy p,
+[data-theme=light] .detail-summary>p,
+[data-theme=light] .detail-editorial p { color:#666c69; }
+[data-theme=light] .intro-copy p span { color:#a0a6a2; }
+[data-theme=light] .journey .eyebrow,
+[data-theme=light] .journey .room-secondary,
+[data-theme=light] .intro-foot,
+[data-theme=light] .intro-foot button,
+[data-theme=light] .room-visual-caption,
+[data-theme=light] .carousel-scroll-hint,
+[data-theme=light] .room-demo-link,
+[data-theme=light] .detail-concept-label,
+[data-theme=light] .bio-copyright { color:#737b76; }
+[data-theme=light] .room-copy h2,
+[data-theme=light] .bio-copy h2,
+[data-theme=light] .detail-title-back,
+[data-theme=light] .detail-editorial h3 { color:#252927; }
+[data-theme=light] .room-categories .room-pill { background:#e1e3e1; color:#69716b; }
+[data-theme=light] .room-pill { background:#e5e7e5; border-color:#00000010; color:#4c554e; }
+[data-theme=light] .room-pill:hover { background:#d3d8d4; }
+[data-theme=light] .room-pill.solid { background:#303632; color:#f4f6f4; }
+[data-theme=light] .room-back,
+[data-theme=light] .room-panel.is-carousel .room-back,
+[data-theme=light] .detail-copy .detail-category-back { color:#a1a7a3; }
+[data-theme=light] .room-back:hover { color:#414a43; }
+[data-theme=light] .back-disc { background:#323934; color:#f5f7f5; }
+[data-theme=light] .description-toggle { color:#313b33; }
+[data-theme=light] .journey .skill-list span { color:#626e65; border-color:#00000018; }
+[data-theme=light] .bio-contact { color:#343f37; border-color:#00000030; }
+[data-theme=light] .bio-visual { background:radial-gradient(ellipse at 60% 30%,#e6e8e6,#d0d5d1); border-color:#00000008; }
+[data-theme=light] .bio-monogram { color:#aeb8b0; text-shadow:0 2px 1px #fff9,0 -1px 2px #0002,18px 25px 20px #0001; }
+[data-theme=light] .bio-visual>span { color:#68786c; }
+[data-theme=light] .journey .floating-navbar { background:#e0e3e0e8; border-color:#0000000c; box-shadow:0 8px 30px #0000000a; }
+[data-theme=light] .journey .floating-navbar .nav-btn { color:#838e85; }
+[data-theme=light] .journey .floating-navbar .nav-btn.active { background:#fff; color:#2c352f; }
+[data-theme=light] .journey .floating-navbar .nav-btn:hover:not(.active) { background:#ffffff65; color:#39483d; }
+[data-theme=light] .journey-position { color:#59665d; }
+[data-theme=light] .journey-position>span { color:#9ba49d; }
+[data-theme=light] .stack-front { border-color:#0000000a; box-shadow:0 20px 45px #00000012; }
+[data-theme=light] .stack-sheet { background:#c7ccc8; }
+[data-theme=light] .room-pause { color:#626f66; }
+[data-theme=light] .room-visual:not(.is-browsing) .room-pause { background:#ffffffe0; color:#4a594f; }
+[data-theme=light] .project-pagination>button { color:#59665e; }
+[data-theme=light] .project-pagination>span { color:#7a877e; }
+[data-theme=light] .project-pagination>div>button { background:#d0d5d1; }
+[data-theme=light] .project-pagination>div>button[aria-pressed=true] { background:#89978d; }
+[data-theme=light] .detail-close { background:#e1e5e1; color:#424f46; }
+[data-theme=light] .detail-story { scrollbar-color:#a1ada4 transparent; }
+/* Concept websites keep their own art direction and native form palette. */
+.demo { color-scheme:light; }
+@media(max-width:600px) {
+  .theme-toggle { top:max(14px,env(safe-area-inset-top)); right:16px; min-height:38px; padding:8px 12px; font-size:10px; }
+}
